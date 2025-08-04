@@ -28,8 +28,10 @@ def get_user_by_username(username):
 
 def insert_user(username, password_hash, role='user'):
     with sqlite3.connect('database.db') as conn:
-        conn.execute("INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
-                     (username, password_hash, role))
+        conn.execute(
+            "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+            (username, password_hash, role)
+        )
         conn.commit()
 
 # --- Routes ---
@@ -82,6 +84,22 @@ def logout():
     session.clear()
     flash("Logged out successfully", "info")
     return redirect(url_for('login'))
+
+# --- PHASE 2 Secure Demo Route ---
+@app.route('/secure_login', methods=['GET', 'POST'])
+def secure_login():
+    error = None
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Simulated correct credentials (not from database)
+        if username == 'admin' and password == 'password123':
+            return render_template('dashboard.html')
+        else:
+            error = 'Invalid username or password'
+
+    return render_template('secure_login.html', error=error)
 
 if __name__ == '__main__':
     init_db()
