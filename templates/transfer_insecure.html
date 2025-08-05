@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Insecure CSRF</title>
+</head>
+<body style="background-color: #0c0f1d; color: white; font-family: Arial; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;">
+    <h1 style="color: #f54242;">🚨 Insecure CSRF Transfer</h1>
+    <form method="POST" style="margin-top: 20px;">
+        <input name="recipient" placeholder="Recipient" required style="padding: 10px; margin-bottom: 10px;"><br>
+        <input name="amount" placeholder="Amount" required type="number" style="padding: 10px;"><br><br>
+        <button type="submit" style="padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px;">Transfer</button>
+    </form>
+    {% if message %}
+        <div style="margin-top: 20px;">{{ message|safe }}</div>
+    {% endif %}
+</body>
+</html>

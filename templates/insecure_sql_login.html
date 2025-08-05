@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Insecure SQL Login</title>
+</head>
+<body style="background-color: #0c0f1d; color: white; font-family: Arial; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px;">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/2950/2950666.png" width="60">
+        <h1 style="margin-top: 10px;">🔓 Insecure SQL Login <span style="color: red;">(Vulnerable)</span></h1>
+    </div>
+
+    <form method="POST" style="max-width: 400px; width: 100%;">
+        <input type="text" name="username" placeholder="Username" style="width: 100%; padding: 10px; margin-bottom: 10px;"><br>
+        <input type="password" name="password" placeholder="Password" style="width: 100%; padding: 10px;"><br><br>
+        <button type="submit" style="padding: 10px 20px; background: crimson; border: none; color: white; border-radius: 5px;">Login</button>
+    </form>
+
+    {% if error %}
+    <div style="margin-top: 30px; background-color: #1d1f2f; padding: 20px; border-radius: 8px;">
+        {{ error|safe }}
+    </div>
+    {% endif %}
+</body>
+</html>

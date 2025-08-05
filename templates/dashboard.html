@@ -2,80 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard – SecureBox</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <title>SecureBox Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(to right, #0d1117, #161b22);
-            font-family: 'Poppins', sans-serif;
+            background-color: #0f1117;
             color: #ffffff;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
         }
-        .dashboard-wrapper {
-            width: 100%;
-            max-width: 520px;
-            background-color: rgba(22, 27, 34, 0.85);
-            border: 1px solid #30363d;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.05);
-            backdrop-filter: blur(6px);
+        .dashboard-card {
+            background-color: #1c1f26;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 1000px;
+            margin: 80px auto;
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.15);
         }
-        .btn-logout {
-            background-color: #da3633;
+        .logout-btn {
+            background-color: #e74c3c;
             border: none;
         }
-        .btn-logout:hover {
-            background-color: #f85149;
+        .logout-btn:hover {
+            background-color: #c0392b;
         }
-        a {
-            color: #58a6ff;
+        .heading {
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+        .role-badge {
+            background-color: #3498db;
+            border-radius: 5px;
+            padding: 3px 10px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+        .activity-log, .alert-log, .login-log {
+            background-color: #15171e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .log-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #2c2f36;
+        }
+        .feature-links a {
+            margin-right: 15px;
+            color: #1abc9c;
+        }
+        .feature-links a:hover {
+            text-decoration: underline;
+        }
+        .badge-alert {
+            background-color: #ff4757;
+            font-size: 0.75rem;
+            margin-left: 6px;
         }
     </style>
 </head>
 <body>
+    <div class="dashboard-card text-center">
+        <h2 class="heading">
+            🔐 Welcome, {{ username }}!
+            <span class="role-badge">{{ role|capitalize }}</span>
+        </h2>
 
-<div class="d-flex flex-column align-items-center justify-content-center vh-100">
-
-    <!-- Centered Animation -->
-    <div class="text-center mb-2">
-        <lottie-player
-            src="https://assets10.lottiefiles.com/packages/lf20_rnnlxazi.json"
-            background="transparent"
-            speed="1"
-            style="width: 120px; height: 120px;"
-            loop
-            autoplay>
-        </lottie-player>
-    </div>
-
-    <!-- Dashboard Card -->
-    <div class="dashboard-wrapper text-start">
-        <h4 class="text-center mb-3">🔓 Welcome, {{ username }} 👋</h4>
-        <p class="text-center">You are logged in as: <strong>{{ role }}</strong></p>
-
-        {% if role == 'admin' %}
-            <div class="alert alert-info text-center">
-                🔐 Admin privileges enabled. You can manage users and secure zones.
-            </div>
-        {% else %}
-            <div class="alert alert-success text-center">
-                ✅ Standard user access. You’re securely authenticated.
-            </div>
+        {% if role == 'admin' and brute_alerts %}
+        <div class="alert-log text-start">
+            <h4 style="color: #ff6b6b">🚨 Brute Force Alerts <span class="badge-alert">{{ brute_count }}</span></h4>
+            {% for alert in brute_alerts %}
+                <div class="log-item">⚠️ {{ alert }}</div>
+            {% endfor %}
+        </div>
         {% endif %}
 
-        <div class="text-center">
-            <a href="/logout" class="btn btn-logout btn-sm text-white mt-3">Logout</a>
+        <div class="feature-links mt-4">
+            <a href="/transfer_insecure">🚨 Test Insecure CSRF</a>
+            <a href="/transfer_secure">🛡️ Test Secure CSRF</a>
+            <a href="/insecure_sql_login">Try SQL Injection Demo</a>
+            <a href="/secure_input">Input Validation Demo</a>
+        </div>
+
+        {% if role == 'admin' %}
+        <div class="activity-log text-start">
+            <h4>📊 Admin Activity Log</h4>
+            <div class="log-item">[{{ role|upper }}] Logged in at {{ timestamp }}</div>
+            <div class="log-item">Visited SQL Injection Page</div>
+            <div class="log-item">Viewed Secure Input Validation</div>
+            <div class="log-item">CSRF Check Performed</div>
+        </div>
+
+        <div class="login-log text-start">
+            <h4>🛂 Login Attempt Logs</h4>
+            {% for ip, attempts in login_logs.items() %}
+            <div class="log-item mb-3">
+                <strong>IP:</strong> {{ ip }} |
+                <strong>Count:</strong> {{ attempts.count }} |
+                <strong>Locked:</strong> {{ attempts.lockout }}
+
+                <ul class="mt-2">
+                    {% for t in attempts.timestamps %}
+                        <li class="text-muted small">⏱️ {{ t }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="mt-4">
+            <a href="{{ url_for('logout') }}" class="btn logout-btn">Logout</a>
         </div>
     </div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

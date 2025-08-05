@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Input</title>
+</head>
+<body style="background-color: #0c0f1d; color: white; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px;">
+
+    <!-- SkyFort Animation Header -->
+    <div style="text-align: center; margin-bottom: 30px;">
+        <img src="https://cdn-icons-png.flaticon.com/512/2950/2950657.png" alt="Secure icon" width="60">
+        <h1 style="margin-top: 10px;">🛡️ Secure Input <span style="color: #00ff99;">(XSS Protected)</span></h1>
+    </div>
+
+    <!-- Input Form -->
+    <form method="POST" style="width: 100%; max-width: 600px;">
+        <textarea name="comment" rows="6" placeholder='Enter comment (no HTML tags allowed)' style="width: 100%; padding: 15px; border-radius: 8px; border: none; font-size: 16px;"></textarea><br><br>
+        <button type="submit" style="padding: 10px 20px; border: none; border-radius: 6px; background-color: #00b894; color: white; font-size: 16px; cursor: pointer;">Submit</button>
+    </form>
+
+    {% if error %}
+        <div style="margin-top: 20px; color: #ff7675; background-color: #2f2b3a; padding: 15px; border-radius: 6px; max-width: 600px; width: 100%;">
+            ⚠️ {{ error }}
+        </div>
+    {% endif %}
+
+    {% if comment %}
+        <div style="margin-top: 30px; background-color: #1d1f2f; padding: 20px; border-radius: 8px; width: 100%; max-width: 600px;">
+            <h3 style="color: #ffeaa7;">Your Input:</h3>
+            <div>{{ comment }}</div>
+        </div>
+    {% endif %}
+
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for('insecure_input') }}" style="color: #74b9ff;">Go to Insecure Version</a>
+    </div>
+
+</body>
+</html>
